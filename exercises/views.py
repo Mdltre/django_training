@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.template.loader import get_template
+from django.shortcuts import render
 import datetime
+from exercises.models import Book, Author, Classification
 
 # Create your views here.
 def hello(request):
@@ -48,4 +48,45 @@ def is_valid_date(request, year, month, day):
         request,
         "is_valid_date.html",
         {"year": year, "month": month,"day": day, "is_valid": answer}
+    )
+    
+def author_info(request, author_id):
+    author = Author.objects.get(id = int(author_id))
+    books = Book.objects.filter(author_id = int(author_id))
+    return render(
+        request,
+        'author_info.html',
+        {"author": author, "books": books}
+    )
+    
+def book_info(request, book_id):
+    book = Book.objects.get(id = int(book_id))
+    return render(
+        request,
+        'book_info.html',
+        {"book": book}
+    )
+    
+def book_list(request):
+    books = Book.objects.all()
+    return render(
+        request,
+        "book_list.html",
+        {"book_list": books}
+    )
+    
+def classification_info(request, classification_id):
+    books = Book.objects.filter(classification_id = int(classification_id))
+    return render(
+        request,
+        'classification_info.html',
+        {"books": books}
+    )
+    
+def classification_list(request):
+    classifications = Classification.objects.all()
+    return render(
+        request,
+        'classification_list.html',
+        {"classifications": classifications}
     )
