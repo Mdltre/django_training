@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Book Classification Information{% endblock %}
+
+{% block header %}
+<h1>Book Classification Information</h1>
+{% endblock %} 
+
+{% block content %}
+<li>
+    {% for book in books%}
+    <ul><a href= "{% url 'book-imformation' book.pk %}">{{book.title}}</a></ul>
+    {% empty %}
+    <ul>No books</ul>
+    {% endfor %}
+</li> 
+{% endblock %}
