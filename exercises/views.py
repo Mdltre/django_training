@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
+from django.template.loader import get_template
 import datetime
 
 # Create your views here.
@@ -24,8 +25,11 @@ def calculator(request, num1, num2, num3=None):
     product = params[0] * params[1] * params[2]
     quotient = params[0] / params[1]
     
-    answer = f"Sum: {final_sum}\nDifference: {difference}\nProduct: {product}\nQuotient: {quotient}"
-    return HttpResponse(answer)
+    return render(
+        request,
+        "calculator.html",
+        {"number1": num1, "number2": num2, "number3": num3, "sum": final_sum, "difference": difference, "product": product, "quotient": quotient}
+    )
     
 def is_valid_date(request, year, month, day):
     
@@ -40,4 +44,8 @@ def is_valid_date(request, year, month, day):
     else:
         answer = "The date is not valid."
         
-    return HttpResponse(answer)
+    return render(
+        request,
+        "is_valid_date.html",
+        {"year": year, "month": month,"day": day, "is_valid": answer}
+    )

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Calculator{% endblock %}
+
+{% block header %}
+<h1> Calculator </h1>
+{% endblock %}
+
+{% block content %}
+<p>Number 1: {{ number1 }}.</p>
+<p>Number 2: {{ number2 }}.</p>
+<p>Number 3: {{ number3 }}.</p>
+<h5>Results</h5>
+<p>Sum: {{ sum }}.</p>
+<p>Difference: {{ difference }}.</p>
+<p>Product: {{ product }}.</p>
+<p>Quotient: {{ quotient }}.</p>
+{% endblock %}

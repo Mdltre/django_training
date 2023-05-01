@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Date Validity Checker{% endblock %}
+
+{% block header %}
+<h1> Date Validity Checker </h1>
+{% endblock %}
+
+{% block content %}
+<p>Year: {{ year }}.</p>
+<p>Month: {{ month }}.</p>
+<p>Day: {{ day }}.</p>
+<h5>Results</h5>
+<p>{{ is_valid }}</p>
+{% endblock %}
