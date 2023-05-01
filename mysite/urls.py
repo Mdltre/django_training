@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from exercises.views import hello
+from exercises.views import hello, current_datetime, calculator, is_valid_date
 
 urlpatterns = [
     path("hello/", hello),
+    path("time/", current_datetime),
     path("admin/", admin.site.urls),
+    path("math/<int:num1>/<int:num2>/<int:num3>", calculator),
+    path("valid-date/<int:year>/<int:month>/<int:day>/", is_valid_date)
 ]
