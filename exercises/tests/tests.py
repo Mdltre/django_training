@@ -2,8 +2,8 @@ from exercises.models import Book, Author, Classification
 
 
 # Create some classifications
-c1 = Classification.objects.create(code='001', name='classif1', description='I am a description.')
-c2 = Classification.objects.create(code='002', name='classif2', description='I am a description too.')
+c1 = Classification.objects.create(code='001', name='name1', description='I am a description.')
+c2 = Classification.objects.create(code='002', name='name2', description='I am a description too.')
 
 # Create some authors
 a1 = Author.objects.create(full_name='Author Wan')
