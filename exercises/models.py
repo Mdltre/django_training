@@ -20,6 +20,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey("exercises.Author", on_delete=models.CASCADE, related_name="exercises")
+    classification = models.ForeignKey("exercises.Classification", on_delete=models.CASCADE, related_name="exercises", null=True)
     publisher = models.ForeignKey("exercises.Publisher", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -31,8 +32,10 @@ class Publisher(models.Model):
     city = models.CharField(max_length=60, null=True)
     state_province = models.CharField(max_length=30, null=True)
     country = models.CharField(max_length=50, null=True)
-    website = models.URLField
+    website = models.URLField(max_length = 200, null=True)
     
     def __str__(self):
         return self.name
+    
+    
     

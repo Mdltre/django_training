@@ -1,7 +1,9 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 import datetime
-from exercises.models import Book, Author, Classification
+from exercises.models import Book, Author, Classification, Publisher
+
+from exercises.forms import BookForm, PublisherForm
 
 # Create your views here.
 def hello(request):
@@ -90,3 +92,101 @@ def classification_list(request):
         'classification_list.html',
         {"classifications": classifications}
     )
+    
+def search_publisher_form(request):
+    return render(request, "search_publisher.html")
+
+def search_publisher(request):
+    errors = []
+    if "q" in request.GET:
+        q = request.GET["q"]
+        if not q:
+            errors.append("Enter a search term.")
+        elif len(q) > 20:
+            errors.append("Please enter at most 20 characters")
+    else:
+        publishers = Publisher.objects.filter(name__icontains=q)
+        return render(
+            request,
+            "search_results_publisher.html",
+            {"publisher": publishers, "query": q},
+        )
+    return render(request, "search_publisher.html", {"errors": errors})
+
+def search_author_form(request):
+    return render(request, "search_author.html")
+
+def search_author(request):
+    errors = []
+    if "q" in request.GET:
+        q = request.GET["q"]
+        if not q:
+            errors.append("Enter a search term.")
+        elif len(q) > 20:
+            errors.append("Please enter at most 20 characters")
+    else:
+        authors = Author.objects.filter(first_name__icontains=q)
+        return render(
+            request,
+            "search_results_author.html",
+            {"author": authors, "query": q},
+        )
+    return render(request, "search_author.html", {"errors": errors})
+
+def create_book(request):
+    form = BookForm()
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/books/")
+    context = {"form": form}
+    return render(request, "create_book.html", context)
+
+def update_book(request, pk=None):
+    book = get_object_or_404(Book, pk=pk)
+    form = BookForm(instance=book)
+    if request.method == "POST":
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/books/")
+    context = {"form": form}
+    return render(request, "update_book.html", context)
+
+def delete_book(request, pk=None):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == "POST":
+        book.delete()
+        return HttpResponseRedirect("/books/")
+    context = {}
+    return render(request, "delete_book.html", context)
+
+def create_publisher(request):
+    form = PublisherForm()
+    if request.method == "POST":
+        form = PublisherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/publishers/")
+    context = {"form": form}
+    return render(request, "create_publisher.html", context)
+
+def update_publisher(request, pk=None):
+    publisher = get_object_or_404(Book, pk=pk)
+    form = PublisherForm(instance=publisher)
+    if request.method == "POST":
+        form = PublisherForm(request.POST, instance=publisher)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/publishers/")
+    context = {"form": form}
+    return render(request, "update_publisher.html", context)
+
+def delete_publisher(request, pk=None):
+    publisher = get_object_or_404(Book, pk=pk)
+    if request.method == "POST":
+        publisher.delete()
+        return HttpResponseRedirect("/publishers/")
+    context = {}
+    return render(request, "delete_publisher.html", context)

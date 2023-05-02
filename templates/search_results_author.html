@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search</title>
+</head>
+<body>
+  {% if authors %}
+    <p>Found {{ authors|length }} author{{ authors|pluralize }}.</p>
+    <ul>
+      {% for author in authors %}
+      <li>{{ author.first_name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No items matched your search criteria.</p>
+  {% endif %}
+</body>
+</html>

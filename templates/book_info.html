@@ -8,6 +8,6 @@
 
 {% block content %} 
 <h3>Title: {{book.title}}</h3>
-<p>Author: <a href = "{% url 'author-info' book.author.pk %}">{{book.author}}</a></p>
+<p>Author: <a href = "{% url 'author-information' book.author.pk %}">{{book.author}}</a></p>
 <p>Classification: {{book.classification}}</p>  
 {% endblock %}
