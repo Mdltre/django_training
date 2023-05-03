@@ -1,11 +1,55 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import datetime
 from exercises.models import Book, Author, Classification, Publisher
-
-from exercises.forms import BookForm, PublisherForm
+from exercises.forms import BookForm, PublisherForm, RegistrationForm
 
 # Create your views here.
+# @login_required
+# def my_view(request):
+#     username = request.POST["username"]
+#     password = request.POST["password"]
+#     user = authenticate(username=username, password=password)
+#     if user is not None:
+#         if user.is_active:
+#             # check if user is an admin
+#             if request.user.is_superuser:
+#                 login(request, user)
+#                 # Redirect to success page 
+#                 return HttpResponseRedirect("/create-book/")
+#             else:
+#                 return HttpResponseRedirect("/books/")
+#         else:
+#             # Return a 'disabled account' error message
+#             return render(request, "invalid_login.html")
+#     else:
+#         # Return an 'invalid login' error message
+#         return render(request, "invalid_login.html")
+		
+# def logout_view(request):
+#     logout(request)
+#     return HttpResponseRedirect("/")
+#     # Redirect to a success page
+
+def register(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            user = User.objects.create_user(username,email,password)
+            
+            return render(request, "book.html")
+    
+    else:
+        form = RegistrationForm()
+        
+    return render(request, "register.html", {"form": form})
+
 def hello(request):
     return HttpResponse("Hello World")
 
