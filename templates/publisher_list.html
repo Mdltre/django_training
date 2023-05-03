@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}List of All Publishers{% endblock %}
+
+{% block header %}
+<h1>Publisher List</h1>
+{% endblock %} 
+
+{% block content %} 
+<ul>
+{% for publisher in publisher_list %}
+    <li><a>{{ publisher.name }}</a></li>
+{% empty %}
+    <li>No publishers</li>
+{% endfor %}
+</ul>
+{% endblock %}

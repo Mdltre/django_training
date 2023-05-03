@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView 
-from exercises.views import hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
+from exercises.views import hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, publisher_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
 
 urlpatterns = [
     path("hello/", hello),
@@ -32,6 +32,7 @@ urlpatterns = [
     path("classification/", classification_list),
     path("classification/<int:classification_id>", classification_info, name='classification'),
     
+    path("publisher/", publisher_list, name='publishers'),
     path("publisher/search-form/", search_publisher_form, name="search-publisher"),
     path("publisher/search/", search_publisher, name="publisher-results"),
     path("author/", author_list, name='authors'),

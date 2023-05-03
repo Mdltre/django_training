@@ -133,7 +133,15 @@ def classification_list(request):
         'classification_list.html',
         {"classifications": classifications}
     )
-    
+
+def publisher_list(request):
+    publishers = Publisher.objects.all()
+    return render(
+        request,
+        "publisher_list.html",
+        {"publisher_list": publishers}
+    )
+
 def search_publisher_form(request):
     return render(request, "search_publisher.html")
 
