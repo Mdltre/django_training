@@ -47,12 +47,12 @@ urlpatterns = [
     path("<int:pk>/update-publisher/", update_publisher),
     path("<int:pk>/delete-publisher/", delete_publisher),
     
-    path("create-author/", create_author),
-    path("<int:pk>/update-author/", update_author),
-    path("<int:pk>/delete-author/", delete_author),
+    path("create-author/", create_author, name='create-author'),
+    path("<int:pk>/update-author/", update_author, name='update-author'),
+    path("<int:pk>/delete-author/", delete_author, name='delete-author'),
     
     path("accounts/", include("django.contrib.auth.urls")), 
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('register/', register, name='register'),
-    path('logout/', logout_view),
+    path('logout/', logout_view, name='logout_view'),
 ]
