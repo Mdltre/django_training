@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}List of All Authors{% endblock %}
+
+{% block header %}
+<h1>Author List</h1>
+{% endblock %} 
+
+{% block content %} 
+<ul>
+{% for author in author_list %}
+    <li><a href= "{% url 'author-information' author.pk %}">{{author.first_name}} {{author.last_name}}</a></li>
+{% empty %}
+    <li>No authors</li>
+{% endfor %}
+</ul>
+{% endblock %}

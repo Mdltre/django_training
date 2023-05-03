@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 import datetime
 from exercises.models import Book, Author, Classification, Publisher, MyUser
-from exercises.forms import BookForm, PublisherForm, RegistrationForm
+from exercises.forms import BookForm, PublisherForm, RegistrationForm, AuthorForm
 
 # Create your views here.
+#
 		
 def logout_view(request):
     logout(request)
@@ -89,6 +90,15 @@ def author_info(request, author_id):
         {"author": author, "books": books}
     )
  
+@login_required
+def author_list(request):
+    authors = Author.objects.all()
+    return render(
+        request,
+        "author_list.html",
+        {"author_list": authors}
+    )
+    
 @login_required  
 def book_info(request, book_id):
     book = Book.objects.get(id = int(book_id))
@@ -135,7 +145,6 @@ def search_publisher(request):
             errors.append("Enter a search term.")
         elif len(q) > 20:
             errors.append("Please enter at most 20 characters")
-    else:
         publishers = Publisher.objects.filter(name__icontains=q)
         return render(
             request,
@@ -155,12 +164,12 @@ def search_author(request):
             errors.append("Enter a search term.")
         elif len(q) > 20:
             errors.append("Please enter at most 20 characters")
-    else:
+            
         authors = Author.objects.filter(first_name__icontains=q)
         return render(
             request,
             "search_results_author.html",
-            {"author": authors, "query": q},
+            {"authors": authors, "query": q},
         )
     return render(request, "search_author.html", {"errors": errors})
 
@@ -227,3 +236,35 @@ def delete_publisher(request, pk=None):
         return HttpResponseRedirect("/publishers/")
     context = {}
     return render(request, "delete_publisher.html", context)
+
+@user_passes_test(is_admin)
+def create_author(request):
+    form = AuthorForm()
+    if request.method == "POST":
+        form = AuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/author/")
+    context = {"form": form}
+    return render(request, "create_author.html", context)
+
+@user_passes_test(is_admin)
+def update_author(request, pk=None):
+    author = get_object_or_404(Book, pk=pk)
+    form = AuthorForm(instance=author)
+    if request.method == "POST":
+        form = AuthorForm(request.POST, instance=author)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/author/")
+    context = {"form": form}
+    return render(request, "update_author.html", context)
+
+@user_passes_test(is_admin)
+def delete_author(request, pk=None):
+    author = get_object_or_404(Book, pk=pk)
+    if request.method == "POST":
+        author.delete()
+        return HttpResponseRedirect("/author/")
+    context = {}
+    return render(request, "delete_author.html", context)

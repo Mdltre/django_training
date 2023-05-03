@@ -11,6 +11,11 @@ class PublisherForm(ModelForm):
     class Meta:
         model = Publisher
         fields = "__all__"
+        
+class AuthorForm(ModelForm):
+    class Meta:
+        model = Author
+        fields = "__all__"
        
 class RegistrationForm(forms.Form):
     username = forms.CharField(max_length =100)

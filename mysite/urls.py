@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView 
-from exercises.views import hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, classification_info, classification_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, register, logout_view
+from exercises.views import hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
 
 urlpatterns = [
     path("hello/", hello),
@@ -26,16 +26,17 @@ urlpatterns = [
     path("math/<int:num1>/<int:num2>/<int:num3>", calculator),
     path("valid-date/<int:year>/<int:month>/<int:day>/", is_valid_date),
     
-    path("books/", book_list),
+    path("books/", book_list, name='books'),
     path("books/<int:book_id>", book_info, name='book-information'),
     path("author/<int:author_id>", author_info, name='author-information'),
     path("classification/", classification_list),
     path("classification/<int:classification_id>", classification_info, name='classification'),
     
-    path("publisher/search-form/", search_publisher_form),
-    path("publisher/search/", search_publisher),
-    path("author/search-form/", search_author_form),
-    path("author/search/", search_author),
+    path("publisher/search-form/", search_publisher_form, name="search-publisher"),
+    path("publisher/search/", search_publisher, name="publisher-results"),
+    path("author/", author_list, name='authors'),
+    path("author/search-form/", search_author_form, name="search-author"),
+    path("author/search/", search_author, name="author-results"),
     
     path("create-book/", create_book),
     path("<int:pk>/update-book/", update_book),
@@ -44,6 +45,10 @@ urlpatterns = [
     path("create-publisher/", create_publisher),
     path("<int:pk>/update-publisher/", update_publisher),
     path("<int:pk>/delete-publisher/", delete_publisher),
+    
+    path("create-author/", create_author),
+    path("<int:pk>/update-author/", update_author),
+    path("<int:pk>/delete-author/", delete_author),
     
     path("accounts/", include("django.contrib.auth.urls")), 
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
