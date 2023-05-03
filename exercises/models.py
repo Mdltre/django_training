@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your models here.
 class Classification(models.Model):
@@ -37,5 +39,10 @@ class Publisher(models.Model):
     def __str__(self):
         return self.name
     
-    
+class MyUser(User):
+    force_logout_date = models.DateTimeField(null=True, blank=True)
+
+    def force_logout(self):
+        self.force_logout_date = datetime.now()
+        self.save()
     

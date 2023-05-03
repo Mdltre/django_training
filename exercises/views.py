@@ -2,36 +2,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 import datetime
-from exercises.models import Book, Author, Classification, Publisher
+from exercises.models import Book, Author, Classification, Publisher, MyUser
 from exercises.forms import BookForm, PublisherForm, RegistrationForm
 
 # Create your views here.
-# @login_required
-# def my_view(request):
-#     username = request.POST["username"]
-#     password = request.POST["password"]
-#     user = authenticate(username=username, password=password)
-#     if user is not None:
-#         if user.is_active:
-#             # check if user is an admin
-#             if request.user.is_superuser:
-#                 login(request, user)
-#                 # Redirect to success page 
-#                 return HttpResponseRedirect("/create-book/")
-#             else:
-#                 return HttpResponseRedirect("/books/")
-#         else:
-#             # Return a 'disabled account' error message
-#             return render(request, "invalid_login.html")
-#     else:
-#         # Return an 'invalid login' error message
-#         return render(request, "invalid_login.html")
 		
-# def logout_view(request):
-#     logout(request)
-#     return HttpResponseRedirect("/")
-#     # Redirect to a success page
+def logout_view(request):
+    logout(request)
+    return render(request, "logged_out.html")
+    # Redirect to a success page
 
 def is_admin(user):
     return user.is_superuser
