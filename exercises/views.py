@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 import datetime
 from exercises.models import Book, Author, Classification, Publisher
@@ -33,6 +32,9 @@ from exercises.forms import BookForm, PublisherForm, RegistrationForm
 #     logout(request)
 #     return HttpResponseRedirect("/")
 #     # Redirect to a success page
+
+def is_admin(user):
+    return user.is_superuser
 
 def register(request):
     if request.method == "POST":
@@ -95,7 +97,8 @@ def is_valid_date(request, year, month, day):
         "is_valid_date.html",
         {"year": year, "month": month,"day": day, "is_valid": answer}
     )
-    
+
+@login_required
 def author_info(request, author_id):
     author = Author.objects.get(id = int(author_id))
     books = Book.objects.filter(author_id = int(author_id))
@@ -104,7 +107,8 @@ def author_info(request, author_id):
         'author_info.html',
         {"author": author, "books": books}
     )
-    
+ 
+@login_required  
 def book_info(request, book_id):
     book = Book.objects.get(id = int(book_id))
     return render(
@@ -112,7 +116,8 @@ def book_info(request, book_id):
         'book_info.html',
         {"book": book}
     )
-    
+
+@login_required
 def book_list(request):
     books = Book.objects.all()
     return render(
@@ -120,7 +125,8 @@ def book_list(request):
         "book_list.html",
         {"book_list": books}
     )
-    
+
+@login_required
 def classification_info(request, classification_id):
     books = Book.objects.filter(classification_id = int(classification_id))
     return render(
@@ -177,6 +183,7 @@ def search_author(request):
         )
     return render(request, "search_author.html", {"errors": errors})
 
+@user_passes_test(is_admin)
 def create_book(request):
     form = BookForm()
     if request.method == "POST":
@@ -187,6 +194,7 @@ def create_book(request):
     context = {"form": form}
     return render(request, "create_book.html", context)
 
+@user_passes_test(is_admin)
 def update_book(request, pk=None):
     book = get_object_or_404(Book, pk=pk)
     form = BookForm(instance=book)
@@ -198,6 +206,7 @@ def update_book(request, pk=None):
     context = {"form": form}
     return render(request, "update_book.html", context)
 
+@user_passes_test(is_admin)
 def delete_book(request, pk=None):
     book = get_object_or_404(Book, pk=pk)
     if request.method == "POST":
@@ -206,6 +215,7 @@ def delete_book(request, pk=None):
     context = {}
     return render(request, "delete_book.html", context)
 
+@user_passes_test(is_admin)
 def create_publisher(request):
     form = PublisherForm()
     if request.method == "POST":
@@ -216,6 +226,7 @@ def create_publisher(request):
     context = {"form": form}
     return render(request, "create_publisher.html", context)
 
+@user_passes_test(is_admin)
 def update_publisher(request, pk=None):
     publisher = get_object_or_404(Book, pk=pk)
     form = PublisherForm(instance=publisher)
@@ -227,6 +238,7 @@ def update_publisher(request, pk=None):
     context = {"form": form}
     return render(request, "update_publisher.html", context)
 
+@user_passes_test(is_admin)
 def delete_publisher(request, pk=None):
     publisher = get_object_or_404(Book, pk=pk)
     if request.method == "POST":
