@@ -43,7 +43,7 @@ def register(request):
             password = form.cleaned_data["password"]
             user = User.objects.create_user(username,email,password)
             
-            return render(request, "book.html")
+            return render(request, "home.html")
     
     else:
         form = RegistrationForm()
