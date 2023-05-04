@@ -17,15 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from exercises.views import BookListView, BookDetailView, CreateBookView, UpdateBookView, DeleteBookView, PublisherListView, CreatePublisherView, UpdatePublisherView, DeletePublisherView, SearchAuthorView, SearchPublisherView, hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, publisher_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
+from exercises.views import BookListView, BookDetailView, CreateBookView, UpdateBookView, DeleteBookView, PublisherListView, CreatePublisherView, UpdatePublisherView, DeletePublisherView, SearchAuthorView, SearchPublisherView, SearchHistoryView, hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, publisher_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
 
 urlpatterns = [
-    path("hello/", hello),
-    path("time/", current_datetime),
+    #ito lng sir?
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path("admin/", admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")), 
+    
+
+    path('register/', register, name='register'),
+    path('logout/', logout_view, name='logout_view'),
     path("math/<int:num1>/<int:num2>/<int:num3>", calculator),
     path("valid-date/<int:year>/<int:month>/<int:day>/", is_valid_date),
-    
+    path("hello/", hello),
+    path("time/", current_datetime),
     # path("books/", book_list, name='books'),
     path("books/", BookListView.as_view(), name='books'),
     # path("books/<int:book_id>", book_info, name='book-information'),
@@ -43,7 +49,7 @@ urlpatterns = [
     # path("author/search-form/", search_author_form, name="search-author"),
     # path("author/search/", search_author, name="author-results"),
     path("author/search/", SearchAuthorView.as_view(), name='search-author'),
-    path("search-history", SearchAuthorView.as_view(), name='search-history'),
+    path("search-history/", SearchHistoryView.as_view(), name='search-history'),
     
     # path("create-book/", create_book),
     path("create-book/", CreateBookView.as_view()),
@@ -62,11 +68,6 @@ urlpatterns = [
     path("create-author/", create_author, name='create-author'),
     path("<int:pk>/update-author/", update_author, name='update-author'),
     path("<int:pk>/delete-author/", delete_author, name='delete-author'),
-    
-    path("accounts/", include("django.contrib.auth.urls")), 
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('register/', register, name='register'),
-    path('logout/', logout_view, name='logout_view'),
     
     
 ]

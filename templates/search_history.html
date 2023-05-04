@@ -7,9 +7,11 @@
 {% endblock %} 
 
 {% block content %} 
+<ul>
+{% for h in history %}
+  <li><a href="{% url 'search-author' %}?query={{h}}">{{h}}</a></li>
+{% endfor %}
+</ul>
 
-    {% for history in search_history %}
-    {{ history }}
-    {% endfor %}
-    
+
 {% endblock %}
