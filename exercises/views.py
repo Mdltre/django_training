@@ -286,7 +286,12 @@ class SearchAuthorView(ListView):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
+            if not self.request.session["search_history"]:
+                self.request.session["search_history"] = [query]
+            else:
+                self.request.session["search_history"] = self.request.session["search_history"] + [query]
             return Author.objects.filter(first_name__contains=query)
+    
         
 class SearchPublisherView(ListView):
     model = Publisher

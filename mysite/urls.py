@@ -43,6 +43,7 @@ urlpatterns = [
     # path("author/search-form/", search_author_form, name="search-author"),
     # path("author/search/", search_author, name="author-results"),
     path("author/search/", SearchAuthorView.as_view(), name='search-author'),
+    path("search-history", SearchAuthorView.as_view(), name='search-history'),
     
     # path("create-book/", create_book),
     path("create-book/", CreateBookView.as_view()),
