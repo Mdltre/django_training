@@ -220,7 +220,7 @@ def create_publisher(request):
         form = PublisherForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/publishers/")
+            return HttpResponseRedirect("/publisher/")
     context = {"form": form}
     return render(request, "create_publisher.html", context)
 
@@ -232,7 +232,7 @@ def update_publisher(request, pk=None):
         form = PublisherForm(request.POST, instance=publisher)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/publishers/")
+            return HttpResponseRedirect("/publisher/")
     context = {"form": form}
     return render(request, "update_publisher.html", context)
 
@@ -241,7 +241,7 @@ def delete_publisher(request, pk=None):
     publisher = get_object_or_404(Book, pk=pk)
     if request.method == "POST":
         publisher.delete()
-        return HttpResponseRedirect("/publishers/")
+        return HttpResponseRedirect("/publisher/")
     context = {}
     return render(request, "delete_publisher.html", context)
 

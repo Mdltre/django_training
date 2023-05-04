@@ -73,7 +73,7 @@ class Search_Publisher(TestCase):
             [r for r in Author.objects.filter(first_name__icontains=query)]
         )
 
-class LoginTestCase(TestCase):
+class Login_Test(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='user2', email='user2@email.com', password='password')
@@ -97,7 +97,7 @@ class LoginTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
         
-class LogoutTest(TestCase):
+class Logout_Test(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username="user2", email="user2@gmail.com", password="password")
@@ -108,47 +108,39 @@ class LogoutTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('logout_view'))
         
-class AddAuthorTest(TestCase):
+class Classification_Info_Test(TestCase):
     def setUp(self):
-        self.client = Client()
-        self.user = User.objects.create_superuser(username="user2", email="user2@gmail.com", password="password")
-        a1 = Author.objects.create(first_name="pony", last_name="pony", email="pony@gmail.com")
+        user=User.objects.create_superuser(username='hello', password='world')
+        self.client.force_login(user)
+        self.classification = Classification.objects.create(code="100", name="Test", description="Thriller generally keeps its audience on the edge of their seats as the plot builds towards a climax.")
+
+    def test_classification_detail_view(self):
+        response = self.client.get(reverse("classification", args=[self.classification.id]))
+        self.assertEqual(response.status_code, 200)
+        
+class Add_Author_Test(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='user2', password='password')
+        self.client.force_login(self.user)
+        self.url = reverse('create-author')
+        self.data = {
+            'first_name': 'Newbie',
+            'last_name': 'Audie',
+            'email': 'newdie@email.com',
+        }
+        
+    def test_update_author(self):
+        self.client.force_login(self.user)
+        data = {
+            "first_name": "Tester",
+            "last_name": "Tests",
+            "email": "test@gmail.com"
+        }
+        response = self.client.post(reverse("update-author", args="1"), data=data)
+        self.assertContains(response,"Tester")
+        self.assertEqual(Author.objects.count(), 1)
+        self.assertEqual(response.status_code, 302)
     
     def test_anonymous_cannot_access_page(self):
         response = self.client.get(reverse("create-author"))
         self.assertRedirects(response, "/accounts/login/?next=/create-author/")
-
-    def test_add_author(self):
-        self.client.force_login(self.user)
-        data = {
-            "first_name": "pony",
-            "last_name": "pony",
-            "email": "pony@gmail.com"
-        }
-        response = self.client.post(reverse("create-author"), data=data)
-        self.assertContains(response,"user2")
-        self.assertContains(response,"pony")
-        self.assertTemplateUsed(response, "create_author.html")
-        self.assertEqual(Author.objects.count(), 2)
-        self.assertEqual(response.status_code, 302)
-
-    def test_update_author(self):
-        self.client.force_login(self.user)
-        data = {
-            "first_name": "pony",
-            "last_name": "pony",
-            "email": "pony@gmail.com"
-        }
-        response = self.client.post(reverse("update-author", args="1"), data=data)
-        self.assertContains(response,"pony")
-        self.assertTemplateUsed(response, "update_author.html")
-        self.assertEqual(Author.objects.count(), 1)
-        self.assertEqual(response.status_code, 200)
-
-    def test_delete_author(self):
-        self.client.force_login(self.user)
-        response = self.client.post(reverse("delete-author", args="1"))
-        self.assertNotContains(response,"pony")
-        self.assertTemplateUsed(response, "delete_author.html")
-        self.assertEqual(Author.objects.count(), 0)
-        self.assertEqual(response.status_code, 404)

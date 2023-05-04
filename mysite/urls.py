@@ -29,7 +29,7 @@ urlpatterns = [
     path("books/", book_list, name='books'),
     path("books/<int:book_id>", book_info, name='book-information'),
     path("author/<int:author_id>", author_info, name='author-information'),
-    path("classification/", classification_list),
+    path("classification/", classification_list, name='classification-list'),
     path("classification/<int:classification_id>", classification_info, name='classification'),
     
     path("publisher/", publisher_list, name='publishers'),
