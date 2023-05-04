@@ -1,6 +1,6 @@
 <form method="POST">
     {% csrf_token %}
-    Are you want to delete this item ?
+    Are you want to delete this item {{ book.title }}?
     <input type="submit" value="Yes" />
     <a href="/books/">Cancel</a>
 </form>

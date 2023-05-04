@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from exercises.models import Book, Author, Classification, Publisher
 
 
-class Search_Author(TestCase):
+class SearchAuthor(TestCase):
     def setUpAuthor(self):
         self.client = Client()
         self.author1 = Author.objects.create(
@@ -42,7 +42,7 @@ class Search_Author(TestCase):
             [r for r in Author.objects.filter(first_name__icontains=query)]
         )
         
-class Search_Publisher(TestCase):
+class SearchPublisher(TestCase):
     def setUpPublisher(self):
         self.client = Client()
         self.publisher1 = Publisher.objects.create(
@@ -73,10 +73,10 @@ class Search_Publisher(TestCase):
             [r for r in Author.objects.filter(first_name__icontains=query)]
         )
 
-class Login_Test(TestCase):
+class LoginTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user(username='user2', email='user2@email.com', password='password')
+        self.user = User.objects.create_superuser(username='user2', email='user2@email.com', password='password')
 
     def test_login_view(self):
         response = self.client.get(reverse('login'))
@@ -97,10 +97,10 @@ class Login_Test(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
         
-class Logout_Test(TestCase):
+class LogoutTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user(username="user2", email="user2@gmail.com", password="password")
+        self.user = User.objects.create_superuser(username="user2", email="user2@gmail.com", password="password")
         self.client.force_login(self.user)
 
     def test_successful_logout(self):
@@ -108,7 +108,7 @@ class Logout_Test(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('logout_view'))
         
-class Classification_Info_Test(TestCase):
+class ClassificationInfoTest(TestCase):
     def setUp(self):
         user=User.objects.create_superuser(username='hello', password='world')
         self.client.force_login(user)
@@ -118,9 +118,9 @@ class Classification_Info_Test(TestCase):
         response = self.client.get(reverse("classification", args=[self.classification.id]))
         self.assertEqual(response.status_code, 200)
         
-class Add_Author_Test(TestCase):
+class AddAuthorTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='user2', password='password')
+        self.user = User.objects.create_superuser(username='user2', password='password')
         self.client.force_login(self.user)
         self.url = reverse('create-author')
         self.data = {
@@ -130,16 +130,25 @@ class Add_Author_Test(TestCase):
         }
         
     def test_update_author(self):
+        # create an author
         self.client.force_login(self.user)
         data = {
             "first_name": "Tester",
             "last_name": "Tests",
             "email": "test@gmail.com"
         }
-        response = self.client.post(reverse("update-author", args="1"), data=data)
+        response = self.client.post(reverse("update-author", args=[1]), data=data, follow=True)
         self.assertContains(response,"Tester")
+        author = Author.objects.get(id=1)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Author.objects.count(), 1)
-        self.assertEqual(response.status_code, 302)
+        
+    def test_delete_author(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse("delete-author", args=[1]), follow=True)
+        self.assertNotContains(response,"Newbie")
+        self.assertEqual(Author.objects.count(), 0)
+        self.assertEqual(response.status_code, 200)
     
     def test_anonymous_cannot_access_page(self):
         response = self.client.get(reverse("create-author"))

@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 import datetime
 from exercises.models import Book, Author, Classification, Publisher, MyUser
 from exercises.forms import BookForm, PublisherForm, RegistrationForm, AuthorForm
@@ -180,7 +181,7 @@ def search_author(request):
             {"authors": authors, "query": q},
         )
     return render(request, "search_author.html", {"errors": errors})
-
+    
 @user_passes_test(is_admin)
 def create_book(request):
     form = BookForm()
@@ -226,7 +227,7 @@ def create_publisher(request):
 
 @user_passes_test(is_admin)
 def update_publisher(request, pk=None):
-    publisher = get_object_or_404(Book, pk=pk)
+    publisher = get_object_or_404(Publisher, pk=pk)
     form = PublisherForm(instance=publisher)
     if request.method == "POST":
         form = PublisherForm(request.POST, instance=publisher)
@@ -238,7 +239,7 @@ def update_publisher(request, pk=None):
 
 @user_passes_test(is_admin)
 def delete_publisher(request, pk=None):
-    publisher = get_object_or_404(Book, pk=pk)
+    publisher = get_object_or_404(Publisher, pk=pk)
     if request.method == "POST":
         publisher.delete()
         return HttpResponseRedirect("/publisher/")
@@ -258,7 +259,7 @@ def create_author(request):
 
 @user_passes_test(is_admin)
 def update_author(request, pk=None):
-    author = get_object_or_404(Book, pk=pk)
+    author = get_object_or_404(Author, pk=pk)
     form = AuthorForm(instance=author)
     if request.method == "POST":
         form = AuthorForm(request.POST, instance=author)
@@ -270,9 +271,105 @@ def update_author(request, pk=None):
 
 @user_passes_test(is_admin)
 def delete_author(request, pk=None):
-    author = get_object_or_404(Book, pk=pk)
+    author = get_object_or_404(Author, pk=pk)
     if request.method == "POST":
         author.delete()
         return HttpResponseRedirect("/author/")
     context = {}
     return render(request, "delete_author.html", context)
+
+class SearchAuthorView(ListView):
+    model = Author
+    template_name = "search_author.html"
+    context_object_name = "authors"
+    
+    def get_queryset(self):
+        query = self.request.GET.get("query")
+        if query:
+            return Author.objects.filter(first_name__contains=query)
+        
+class SearchPublisherView(ListView):
+    model = Publisher
+    template_name = "search_publisher.html"
+    context_object_name = "publishers"
+    
+    def get_queryset(self):
+        query = self.request.GET.get("query")
+        if query:
+            return Publisher.objects.filter(name__contains=query)
+
+class BookListView(ListView):
+    model = Book
+    queryset = Book.objects.all()
+    context_object_name = "book_list"
+    template_name = "book_list.html"
+    
+    
+class BookDetailView(DetailView):
+    model = Book
+    context_object_name = "book"
+    template_name="book_info.html"
+    
+    def get_object(self):
+        return get_object_or_404(Book, pk=self.kwargs.get("book_id"))
+    
+class CreateBookView(CreateView):
+    model = Book
+    form_class = BookForm
+    template_name="create_book.html"
+    success_url="/books/"
+    
+class UpdateBookView(UpdateView):
+    model = Book
+    form_class = BookForm
+    context_object_name = "book"
+    template_name = "update_book.html"
+    success_url = "/books/"
+    
+    def get_object(self):
+        return get_object_or_404(Book, pk=self.kwargs.get("pk"))
+    
+class DeleteBookView(DeleteView):
+    model = Book
+    template_name = "delete_book.html"
+    success_url = "/books/"
+    
+class PublisherListView(ListView):
+    model = Publisher
+    queryset = Publisher.objects.all()
+    context_object_name = "publisher_list"
+    template_name = "publisher_list.html"
+    
+# class PublisherDetailView(DetailView):
+#     model = Publisher
+#     context_object_name = "publisher"
+#     template_name="publisher_info.html"
+    
+#     def get_object(self):
+#         return get_object_or_404(Publisher, pk=self.kwargs.get("publisher_id"))
+# wala pla akong publisher details view 
+
+class CreatePublisherView(CreateView):
+    model = Publisher
+    form_class = PublisherForm
+    template_name="create_publisher.html"
+    success_url="/publishers/"
+    
+class UpdatePublisherView(UpdateView):
+    model = Publisher
+    form_class = PublisherForm
+    context_object_name = "publisher"
+    template_name = "update_publisher.html"
+    success_url = "/publishers/"
+    
+    def get_object(self):
+        return get_object_or_404(Publisher, pk=self.kwargs.get("pk"))
+    
+class DeletePublisherView(DeleteView):
+    model = Publisher
+    template_name = "delete_publisher.html"
+    success_url = "/publishers/"
+    
+    
+
+    

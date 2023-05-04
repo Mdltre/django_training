@@ -15,5 +15,10 @@
   {% else %}
     <p>No items matched your search criteria.</p>
   {% endif %}
+  {% if authors.exists %}
+  {% for result in authors %}
+    {{ result }}
+  {% endfor %}
+  {% endif %}
 </body>
 </html>

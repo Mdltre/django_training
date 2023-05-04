@@ -23,8 +23,22 @@
   <p style="color: red;">Please submit a search term.</p>
   {% endif %}
   <form action="/publisher/search/" method="get">
-    <input type="text" name="q">
+    <input type="text" name="query">
     <input type="submit" value="Search">
   </form>
-</body>
+  {% if publishers %}
+    <p>Found {{ publishers|length }} publisher{{ publishers|pluralize }}.</p>
+    <ul>
+      {% for publisher in publishers %}
+      <li>{{publisher.name}}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No items matched your search criteria.</p>
+  {% endif %}
+  {% if publishers.exists %}
+  {% for result in publishers %}
+    {{ result }}
+  {% endfor %}
+  {% endif %}
 </html>
