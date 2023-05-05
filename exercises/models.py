@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # Create your models here.
 class Classification(models.Model):
@@ -21,12 +21,21 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
-    author = models.ForeignKey("exercises.Author", on_delete=models.CASCADE, related_name="exercises")
+    authors = models.ManyToManyField("exercises.Author")
     classification = models.ForeignKey("exercises.Classification", on_delete=models.CASCADE, related_name="exercises", null=True)
     publisher = models.ForeignKey("exercises.Publisher", on_delete=models.CASCADE, null=True)
+    publication_date = models.DateField(null=True)
 
     def __str__(self):
         return f"{self.title}"
+    
+    def was_published_recently(self):
+        date_today = timezone.now().date()
+        return self.publication_date >= date_today - timedelta(day=1)
+    
+    was_published_recently.admin_order_field = "publication_date"
+    was_published_recently.boolean = True
+    was_published_recently.short_description = "Published recently?"
     
 class Publisher(models.Model):
     name = models.CharField(max_length=30, null=True)
