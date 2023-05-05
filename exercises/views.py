@@ -279,6 +279,17 @@ def delete_author(request, pk=None):
     context = {}
     return render(request, "delete_author.html", context)
 
+class AddUserMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        
+    def __call__(self, request):
+        response = self.get_response(request)
+        if request.user.is_authenticated() and request.user.author:
+            request.author = request.user.author
+        print(response)
+        return response
+
 class SearchAuthorView(ListView):
     model = Author
     template_name = "search_author.html"

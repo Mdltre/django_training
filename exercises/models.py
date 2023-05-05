@@ -12,9 +12,12 @@ class Classification(models.Model):
         return self.name
 
 class Author(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="author", null=True
+    )
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=40, null=True)
-    email = models.EmailField(null=True)
+    email = models.EmailField(verbose_name="e-mail", null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
