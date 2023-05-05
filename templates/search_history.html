@@ -8,8 +8,13 @@
 
 {% block content %} 
 <ul>
-{% for h in history %}
-  <li><a href="{% url 'search-author' %}?query={{h}}">{{h}}</a></li>
+{% for ah in ahistory %}
+  <li><a href="{% url 'search-author' %}?query={{ah}}">{{ah}}</a></li>
+{% endfor %}
+</ul>
+<ul>
+{% for ph in phistory %}
+  <li><a href="{% url 'search-publisher' %}?query={{ph}}">{{ph}}</a></li>
 {% endfor %}
 </ul>
 

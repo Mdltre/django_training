@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from exercises.views import BookListView, BookDetailView, CreateBookView, UpdateBookView, DeleteBookView, PublisherListView, CreatePublisherView, UpdatePublisherView, DeletePublisherView, SearchAuthorView, SearchPublisherView, SearchHistoryView, hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, publisher_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
+from exercises.views import BookListView, BookDetailView, CreateBookView, UpdateBookView, DeleteBookView, PublisherListView, CreatePublisherView, UpdatePublisherView, DeletePublisherView, SearchAuthorView, SearchPublisherView, HistoryAuthorView, HistoryPublisherView, hello, current_datetime, calculator, is_valid_date, author_info, book_info, book_list, author_list, classification_info, classification_list, publisher_list, search_publisher_form, search_publisher, search_author_form, search_author, create_book, update_book, delete_book, create_publisher, update_publisher, delete_publisher, create_author, update_author, delete_author, register, logout_view
 
 urlpatterns = [
     #ito lng sir?
@@ -49,7 +49,8 @@ urlpatterns = [
     # path("author/search-form/", search_author_form, name="search-author"),
     # path("author/search/", search_author, name="author-results"),
     path("author/search/", SearchAuthorView.as_view(), name='search-author'),
-    path("search-history/", SearchHistoryView.as_view(), name='search-history'),
+    path("search-history/", HistoryAuthorView.as_view(), name='search-history'),
+    path("search-history/", HistoryPublisherView.as_view(), name='search-history'),
     
     # path("create-book/", create_book),
     path("create-book/", CreateBookView.as_view()),

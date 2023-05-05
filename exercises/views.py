@@ -287,12 +287,12 @@ class SearchAuthorView(ListView):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            if not self.request.session.get("search_history"):
+            if not self.request.session.get("author_history"):
                 print(query)
-                self.request.session["search_history"] = [query]
+                self.request.session["author_history"] = [query]
             else:
                 print(query)
-                self.request.session["search_history"] = self.request.session["search_history"] + [query]
+                self.request.session["author_history"] = self.request.session["author_history"] + [query]
             return Author.objects.filter(first_name__contains=query)
     
         
@@ -304,21 +304,29 @@ class SearchPublisherView(ListView):
     def get_queryset(self):
         query = self.request.GET.get("query")
         if query:
-            if not self.request.session.get("search_history"):
+            if not self.request.session.get("publisher_history"):
                 print(query)
-                self.request.session["search_history"] = [query]
+                self.request.session["publisher_history"] = [query]
             else:
                 print(query)
-                self.request.session["search_history"] = self.request.session["search_history"] + [query]
+                self.request.session["publisher_history"] = self.request.session["publisher_history"] + [query]
             return Publisher.objects.filter(name__contains=query)
         
-class SearchHistoryView(ListView):
+class HistoryAuthorView(ListView):
     template_name = "search_history.html"
-    context_object_name = "history"
+    context_object_name = "ahistory"
 
     def get_queryset(self):
-        if self.request.session.get("search_history"):
-            return self.request.session["search_history"]
+        if self.request.session.get("author_history"):
+            return self.request.session["author_history"]
+        
+class HistoryPublisherView(ListView):
+    template_name = "search_history.html"
+    context_object_name = "phistory"
+
+    def get_queryset(self):
+        if self.request.session.get("publisher_history"):
+            return self.request.session["publisher_history"]
 
 class BookListView(ListView):
     model = Book
